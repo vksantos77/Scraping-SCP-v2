@@ -1,12 +1,12 @@
 from enum import Enum
 
-class SCPClassEnum(Enum):
-    Safe = 1
-    Euclid = 2
-    Keter = 3
-    Thaumiel = 4
-    Apollyon = 5
-    Archon = 6
-    Neutralized = 7
-    Explained = 8
-    Pending = 9
+class SCPClassEnum(str, Enum):
+    Safe = "Safe"
+    Euclid = "Euclid"
+    Keter = "Keter"
+    Thaumiel = "Thaumiel"
+    Apollyon = "Apollyon"
+    Archon = "Archon"
+    Neutralized = "Neutralized"
+    Explained = "Explained"
+    Pending = "Pending"
