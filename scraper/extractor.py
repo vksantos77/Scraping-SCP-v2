@@ -1,8 +1,22 @@
 import requests
+import json
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-URL = "http://scp-pt-br.wikidot.com/scp-3516"
+CLASSE_MAP = {
+    "seguro": "Safe",
+    "euclid": "Euclid",
+    "euclídeo": "Euclid",
+    "keter": "Keter",
+    "thaumiel": "Thaumiel",
+    "apolion": "Apollyon",
+    "archon": "Archon",
+    "neutralizado": "Neutralized",
+    "explicado": "Explained",
+    "pendente": "Pending"
+}
+
+URL = "http://scp-pt-br.wikidot.com/scp-012"
 
 # Títulos que identificam seções principais — não viram conteúdo adjacente
 SECOES_PRINCIPAIS = [
@@ -121,7 +135,7 @@ def extrair_scp(soup: BeautifulSoup) -> dict:
 def montar_dto(dados: dict, url: str) -> dict:
     return {
         "itemNumber": dados["itemNumber"],
-        "objectClass": dados["objectClass"],
+        "objectClass": CLASSE_MAP.get(dados["objectClass"].strip().lower(), dados["objectClass"]),
         "containmentProcedures": dados["containmentProcedures"],
         "description": dados["description"],
         "conteudos_adjacentes": dados["conteudos_adjacentes"],
@@ -131,13 +145,17 @@ def montar_dto(dados: dict, url: str) -> dict:
         }
     }
 
+def salvar_json(dto: dict, caminho: str = "scp_output.json"):
+    with open(caminho, "w", encoding="utf-8") as f:
+        json.dump(dto, f, ensure_ascii=False, indent=4)
+    print(f"Arquivo salvo em: {caminho}")
 
-def main():
+def main() -> dict:
     soup = buscar_html(URL)
     dados = extrair_scp(soup)
     dto = montar_dto(dados, URL)
-    print(dto)
-
+    salvar_json(dto)
+    return dto
 
 if __name__ == "__main__":
     main()
