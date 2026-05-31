@@ -1,7 +1,10 @@
+import os
+from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
+load_dotenv()
 
-MONGO_URL = "mongodb://localhost:27017"
-DB_NAME = "scp_db"
+MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017")
+DB_NAME = os.getenv("DB_NAME", "scp_db")
 
 client = AsyncIOMotorClient(MONGO_URL)
 database = client[DB_NAME]
