@@ -9,16 +9,22 @@ from rabbitmq import connection_queue, FILA
 API = 'http://localhost:8000/scp'
 
 def processar_mensagem(ch, method, properties, body):
-    dados = json.loads(body)
-    print(f"[CONSUMER] Mensagem recebida: {dados}")
-    
-    response = requests.post(API, json=dados)
+    try:
+        dados = json.loads(body)
+        print(f"[CONSUMER] Processando: {dados.get('itemNumber')}")
 
-    if response.status_code == 200:
-        ch.basic_ack(delivery_tag=method.delivery_tag)
-    else:
-        ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)   
-    
+        response = requests.post(API, json=dados)
+
+        if response.status_code == 200:
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+        else:
+            print(f"[CONSUMER] API recusou {dados.get('itemNumber')}: {response.status_code} {response.text}")
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+    except Exception as e:
+        # Uma mensagem com problema não pode travar o consumo das demais.
+        print(f"[CONSUMER] Erro ao processar mensagem: {e}")
+        ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+
 def main():
     channel = connection_queue()
     channel.basic_qos(prefetch_count=1)

@@ -8,8 +8,12 @@ router = APIRouter(prefix="/scp", tags=["SCP"])
 async def criar_scp(scp: SCP):
     try:
         collection = get_collection("scps")
-        resultado = await collection.insert_one(scp.model_dump())
-        return {"mensagem": "SCP inserido com sucesso", "id": str(resultado.inserted_id)}
+        resultado = await collection.replace_one(
+            {"itemNumber": scp.itemNumber}, scp.model_dump(), upsert=True
+        )
+        if resultado.upserted_id:
+            return {"mensagem": "SCP inserido com sucesso", "id": str(resultado.upserted_id)}
+        return {"mensagem": "SCP atualizado com sucesso"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 @router.get("/all")

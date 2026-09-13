@@ -34,4 +34,4 @@ def publicar_scps(limite: int = None):
 
 
 if __name__ == "__main__":
-    publicar_scps(limite=15)
+    publicar_scps(limite=40)
