@@ -1,8 +1,11 @@
 import requests
 import json
+import sys
 import time
 from bs4 import BeautifulSoup
 from datetime import datetime
+
+sys.stdout.reconfigure(encoding="utf-8")
 
 BASE_URL = "http://scp-pt-br.wikidot.com"
 

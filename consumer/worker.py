@@ -1,6 +1,8 @@
 import json
 import requests
 import sys
+
+sys.stdout.reconfigure(encoding="utf-8")
 sys.path.append("../shared")
 from rabbitmq import connection_queue, FILA
 

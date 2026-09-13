@@ -1,6 +1,8 @@
 import json
 import pika
 import sys
+
+sys.stdout.reconfigure(encoding="utf-8")
 sys.path.append("../shared")
 from rabbitmq import connection_queue, FILA
 from extractor import raspar_todos

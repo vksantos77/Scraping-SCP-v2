@@ -1,4 +1,7 @@
 import pika
+import sys
+
+sys.stdout.reconfigure(encoding="utf-8")
 
 RABBIT_HOST = "localhost"
 FILA = "SCPs"
